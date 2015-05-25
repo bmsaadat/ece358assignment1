@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -58,7 +59,6 @@ public class VigenereCipher {
 	
 	public static void main(String[] args) throws IOException {
 		String cipherText = readCipherText("ciphertext");
-		//String dummyText = "vptnvffuntshtarptymjwzirappljmhhqvsubwlzzygvtyitarptyiougxiuydtgzhhvvmumshwkzgstfmekvmpkswdgbilvjljmglmjfqwioiivknulvvfemioiemojtywdsajtwmtcgluysdsumfbieugmvalvxkjduetukatymvkqzhvqvgvptytjwwldyeevquhlulwpkt";
 		/*
 		for (int i = 1; i < 25; i++) {
 			double avg = averageIndexOfCoincidence(cipherText, i);
@@ -66,13 +66,22 @@ public class VigenereCipher {
 		}	
 		
 		chiSquaredStatistic(cipherText, 7);*/
+		
+		
 		System.out.println(cipherText);
 		String decryptedString = decrypt(cipherText, "jqjsghc");
-		//System.out.println(decryptedString);
+		
+		
 		String encryptedString = encrypt(decryptedString, "jqjsghc");
 		System.out.println(encryptedString);
-		//decryptedString = decrypt(encryptedString, "jqjsghc");
-		//System.out.println(decryptedString);
+		
+		
+		// Output the deciphered text to a file
+		PrintWriter writer = new PrintWriter("plaintext.txt", "UTF-8");
+		writer.println(decryptedString);
+		writer.close();
+		
+		outputCipherTextLetterFrequencies(cipherText, 7);
 	}
 
 	public static String readCipherText (String fileName) throws IOException {
@@ -192,6 +201,48 @@ public class VigenereCipher {
 		}
 	}
 
+	public static void outputCipherTextLetterFrequencies(String cipherText,
+			int period) {
+		// Splitting the larger cipherText into the different period sections
+		for (int i = 0; i < period; i++) {
+			// This hash table will contain the frequencies of each letter
+			HashMap<Character, Integer> frequencyTable = new HashMap<Character, Integer>();
+			// This count will keep track of how many letters in this period
+			// section
+			// This count will keep track of how many letters in this period section
+	        int textCount = 0;
+			// Iterate through this period section and fill the hash table
+			for (int k = 0; k < cipherText.length(); k++) {
+				int position = i + k * period;
+				if (position > cipherText.length() - 1)
+					break;
+				
+				textCount++;
+				Character c = Character.valueOf(cipherText.charAt(position));
+				if (c.charValue() == '\n')
+					continue;
+				if (frequencyTable.containsKey(c)) {
+					Integer freq = frequencyTable.get(c);
+					int freqValue = freq.intValue() + 1;
+					frequencyTable.put(c, Integer.valueOf(freqValue));
+				} else {
+					frequencyTable.put(c, Integer.valueOf(1));
+				}
+			}
+			System.out.println();
+			System.out.println("-------------");
+			System.out.println("Period: " + i);
+			for (Character key : frequencyTable.keySet()) {
+				double frequency = (double)frequencyTable.get(key).intValue() / textCount;
+				String formattedFrequency = String.format("Frequency: %.2f%%", frequency * 100);
+				System.out.println("Letter: " + key + " " + formattedFrequency);
+			}
+			System.out.println("-------------");
+			System.out.println();
+
+		}
+	}
+	
 	// Rotate left to decipher (right to cipher)
 	public static char rotateCharacterLeft(char c, int amt) {
 		char newChar = c;
