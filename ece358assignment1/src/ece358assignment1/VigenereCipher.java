@@ -66,7 +66,13 @@ public class VigenereCipher {
 		}	
 		
 		chiSquaredStatistic(cipherText, 7);*/
-		decrypt(cipherText, "jqjsghc");
+		System.out.println(cipherText);
+		String decryptedString = decrypt(cipherText, "jqjsghc");
+		//System.out.println(decryptedString);
+		String encryptedString = encrypt(decryptedString, "jqjsghc");
+		System.out.println(encryptedString);
+		//decryptedString = decrypt(encryptedString, "jqjsghc");
+		//System.out.println(decryptedString);
 	}
 
 	public static String readCipherText (String fileName) throws IOException {
@@ -197,6 +203,17 @@ public class VigenereCipher {
 		return newChar;
 	}
 	
+	// Rotate right to cipher
+	public static char rotateCharacterRight(char c, int amt) {
+		char newChar = c;
+		if ((c + amt) > 'z') {
+			newChar = (char) ('a' - 1 + (c + amt) - 'z');
+		} else {
+			newChar = (char) (c + amt);
+		}
+		return newChar;
+	}
+	
 	public static String decrypt(String cipherText, String key) {
 		String plainText = "";
 		int currentKeyIndex = 0;
@@ -206,13 +223,18 @@ public class VigenereCipher {
 			currentKeyIndex = (currentKeyIndex + 1) % key.length();
 			plainText += rotatedChar;
 		}
-		System.out.println(plainText);
 		return plainText;
 	}
 	
 	public static String encrypt(String text, String key) {
 		String cipherText = "";
-		
+		int currentKeyIndex = 0;
+		for (int i = 0; i < text.length(); i++) {
+			char originalChar = text.charAt(i);
+			char rotatedChar = rotateCharacterRight(originalChar, key.charAt(currentKeyIndex) - 'a');
+			currentKeyIndex = (currentKeyIndex + 1) % key.length();
+			cipherText += rotatedChar;
+		}
 		return cipherText;
 	}
 }
