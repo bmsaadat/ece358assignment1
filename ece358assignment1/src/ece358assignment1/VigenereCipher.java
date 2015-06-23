@@ -59,15 +59,22 @@ public class VigenereCipher {
 	
 	public static void main(String[] args) throws IOException {
 		String cipherText = readCipherText("ciphertext");
+		
+		// The following determines the index of coincidence and the chi-squared statistic
 		/*
 		for (int i = 1; i < 25; i++) {
 			double avg = averageIndexOfCoincidence(cipherText, i);
-			System.out.println("Period: " + i + " Avg: " + avg);
+			System.out.println("Key Length: " + i + " Avg: " + avg);
 		}	
 		
-		chiSquaredStatistic(cipherText, 7);*/
+		// After knowing the key length, we input that as well as the cipher text into the chiSquared function which will
+		// Determine the individual letters of the key
+		chiSquaredStatistic(cipherText, 7);
+		*/
 		
 		
+		// The following are the decrypt/encrypt functions, and the call to write the decrypted string to file
+		/*
 		System.out.println(cipherText);
 		String decryptedString = decrypt(cipherText, "jqjsghc");
 		
@@ -80,8 +87,11 @@ public class VigenereCipher {
 		PrintWriter writer = new PrintWriter("plaintext.txt", "UTF-8");
 		writer.println(decryptedString);
 		writer.close();
+		*/
 		
+		// This outputs the cipher text letter frequencies
 		outputCipherTextLetterFrequencies(cipherText, 7);
+		
 	}
 
 	public static String readCipherText (String fileName) throws IOException {
